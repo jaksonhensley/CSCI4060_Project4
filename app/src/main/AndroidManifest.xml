@@ -12,6 +12,15 @@
         android:theme="@style/Theme.CountryQuiz"
         tools:targetApi="31">
         <activity
+            android:name=".ViewPreviousQuizzes"
+            android:exported="false" />
+        <activity
+            android:name=".HelpScreen"
+            android:exported="false" />
+        <activity
+            android:name=".NewQuiz"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
