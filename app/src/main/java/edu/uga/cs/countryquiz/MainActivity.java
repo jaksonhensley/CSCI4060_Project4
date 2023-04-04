@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Handle the click event for the "Start Quiz" button
-                Intent intent = new Intent(MainActivity.this, NewQuiz.class);
+                Intent intent = new Intent(MainActivity.this, QuestionActivity.class);
                 startActivity(intent);
             } // onClick
         }); // startQuizButton.setOnClickListener
