@@ -14,7 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
- * CountriesData is a POJO (Plain Ol Java Object) Helper Class that is intended to be a link between
+ * CountriesData is a POJO (Plain Ole Java Object) Helper Class that is intended to be a link between
  * the SQLite Database and the Country Quiz app instance. It extends SQLiteOpenHelper and will be
  * the class that interacts with our SQLite Database.
  *
