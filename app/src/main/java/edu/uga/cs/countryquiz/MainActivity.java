@@ -2,7 +2,10 @@ package edu.uga.cs.countryquiz;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +16,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Create an instance of the CountryData class, which manages the database and provides
+        // Methods to query it
+        CountriesData countriesData = CountriesData.getInstance(this);
+
+        //TODO: Write AsyncTask to get an instance of CountriesData.
 
         //These are the buttons from the layout
         Button viewPreviousQuizzesButton = findViewById(R.id.mainMenuViewPreviousQuizzesButton);

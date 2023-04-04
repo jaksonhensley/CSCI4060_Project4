@@ -1,10 +1,13 @@
 package edu.uga.cs.countryquiz;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
@@ -50,6 +53,9 @@ public class CountriesData extends SQLiteOpenHelper {
     // To use the local scope of context (getInstance(), for example), simply use the
     // "context" variable. To use the global scope of context (onCreate()) use "this.context"
     private Context context;
+
+    // This is our database
+    private SQLiteDatabase db; // TODO: Do we need this?
 
     /**
      * Creates a new instance of the CountriesData class with the specified parameters.
@@ -163,4 +169,116 @@ public class CountriesData extends SQLiteOpenHelper {
             } // Closing inputStream try / catch block
         } // Reading CSV Values into Database try / catch block
     } // readDataFromCSV()
+
+    /**
+     * Returns an array of all unique continents in the database.
+     * @return a String array containing the names of all unique continents in the database
+     */
+    public String[] getContinents(SQLiteDatabase db) {
+        Cursor cursor = null;
+        String[] continents = null;
+
+        try {
+
+            // NOTE: Using the DISTINCT keyword returns every unique continent in the data set
+            cursor = db.rawQuery("SELECT DISTINCT " + COLUMN_CONTINENT_NAME + " FROM " + TABLE_COUNTRIES, null);
+            continents = new String[cursor.getCount()];
+
+            // Number of unique continents
+            int continentIndex = cursor.getColumnIndex(COLUMN_CONTINENT_NAME);
+
+            // If the column name doesn't exist in the result set, the getColumnIndex() method will return -1
+            if (continentIndex >= 0) {
+                int i = 0;
+                while (cursor.moveToNext()) {
+                    String continent = cursor.getString(continentIndex);
+                    continents[i] = continent;
+                    i++;
+                } // while
+            } // if
+            cursor.close();
+            return continents;
+        } catch (Exception e) {
+            Log.e(TAG, "Error getting the unique continent names from the Database", e);
+            e.printStackTrace();
+        } finally {
+            cursor.close();
+            return continents;
+        }
+    } // getContinents()
+
+    /**
+     * Retrieves all countries from the database and returns them as an array of Country objects.
+     * @param db The SQLiteDatabase to retrieve data from.
+     * @return An array of Country objects representing all countries in the database.
+     */
+    public Country[] getCountries(SQLiteDatabase db) {
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_COUNTRY_NAME + ", " + COLUMN_CONTINENT_NAME + " FROM " + TABLE_COUNTRIES, null);
+        Country[] countries = new Country[cursor.getCount()];
+        int countryNameIndex = cursor.getColumnIndex(COLUMN_COUNTRY_NAME);
+        int continentNameIndex = cursor.getColumnIndex(COLUMN_CONTINENT_NAME);
+        int i = 0;
+        if (countryNameIndex >= 0 && continentNameIndex >= 0) {
+            while (cursor.moveToNext()) {
+                String countryName = cursor.getString(countryNameIndex);
+                String continentName = cursor.getString(continentNameIndex);
+                Country country = new Country(countryName, continentName);
+                countries[i] = country;
+                i++;
+            } // while
+        } // if
+        cursor.close();
+        return countries;
+    } // getCountries()
+
+    /**
+     * Create and/or open a database for reading. The database is not actually
+     * opened until one of getWritableDatabase or
+     * getReadableDatabase is called.
+     *
+     * This method should only be called from an SQLiteDatabase instance
+     * created using getWritableDatabase or getReadableDatabase.
+     *
+     * Once opened successfully, the database is cached, so you can call this
+     * method every time you need to read from the database. (Make sure to call
+     * SQLiteDatabase.close() when you're done reading from the database.)
+     *
+     * @return a readable database object
+     * @throws SQLiteException if the database cannot be opened
+     */
+    public SQLiteDatabase getReadableDatabase() {
+        if (db == null) {
+            db = super.getReadableDatabase();
+        } // if
+        return db;
+    } // getReadableDatabase()
+
+    /**
+     * Create and/or open a database that will be used for reading and writing.
+     * The first time this is called, the database will be opened and
+     * onCreate, onUpgrade and/or onOpen will be
+     * called.
+     *
+     * Once opened successfully, the database is cached, so you can call this
+     * method every time you need to write to the database. (Make sure to call
+     * SQLiteDatabase.close() when you're done writing to the database.)
+     *
+     * Errors such as bad permissions or a full disk may cause this operation
+     * to fail, but future attempts may succeed if the problem is fixed.
+     *
+     * Database upgrade may take a long time, you should not
+     * call this method from the application main thread, including from
+     * ContentProvider.onCreate().
+     *
+     * @return a writable database object
+     * @throws SQLiteException if the database cannot be opened for writing
+     */
+    public SQLiteDatabase getWritableDatabase() {
+        if (db == null) {
+            db = super.getWritableDatabase();
+        } // if
+        return db;
+    } // getWritableDatabase()
+
+
 } // CountriesData Class
