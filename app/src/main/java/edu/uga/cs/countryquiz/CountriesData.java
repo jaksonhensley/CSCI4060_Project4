@@ -32,11 +32,18 @@ import java.io.InputStreamReader;
  */
 public class CountriesData extends SQLiteOpenHelper {
 
-    // Constant variables that we're using when writing SQL queries
+    // Constant variables that we're using when writing SQL queries on the "countries" table
     private static final String TABLE_COUNTRIES = "countries";
     private static final String COLUMN_CONTINENT_NAME = "continent_name";
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_COUNTRY_NAME = "country_name";
+
+    // Constant variables that we're using when writing SQL queries on the "results" table
+    private static final String TABLE_RESULTS = "results";
+    private static final String COLUMN_DATE = "date";
+    private static final String COLUMN_RESULT = "result";
+
+    // Constant variables that we're using for the overall Database
     private static final String DATABASE_NAME = "countries.db";
     private static final int DATABASE_VERSION = 1;
 
@@ -112,8 +119,10 @@ public class CountriesData extends SQLiteOpenHelper {
                 COLUMN_COUNTRY_NAME + " TEXT NOT NULL, " +
                 COLUMN_CONTINENT_NAME + " TEXT NOT NULL)";
 
-        String createResultsTableQuery = "CREATE TABLE IF NOT EXISTS results (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT NOT NULL, result INTEGER NOT NULL)";
-
+        String createResultsTableQuery = "CREATE TABLE IF NOT EXISTS " + TABLE_RESULTS +
+                "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_DATE + " TEXT NOT NULL, " +
+                COLUMN_RESULT + " INTEGER NOT NULL)";
         // Executing the queries on the Database
         // These are wrapped in a try / catch block so that the app doesn't crash if an error occurs
         try {
@@ -212,24 +221,41 @@ public class CountriesData extends SQLiteOpenHelper {
      * @param db The SQLiteDatabase to retrieve data from.
      * @return An array of Country objects representing all countries in the database.
      */
+    /**
+     * Retrieve all countries from the database.
+     *
+     * @param db the SQLiteDatabase instance to retrieve the data from.
+     * @return an array of Country objects.
+     */
     public Country[] getCountries(SQLiteDatabase db) {
-        Cursor cursor = db.rawQuery("SELECT " + COLUMN_COUNTRY_NAME + ", " + COLUMN_CONTINENT_NAME + " FROM " + TABLE_COUNTRIES, null);
-        Country[] countries = new Country[cursor.getCount()];
-        int countryNameIndex = cursor.getColumnIndex(COLUMN_COUNTRY_NAME);
-        int continentNameIndex = cursor.getColumnIndex(COLUMN_CONTINENT_NAME);
-        int i = 0;
-        if (countryNameIndex >= 0 && continentNameIndex >= 0) {
-            while (cursor.moveToNext()) {
-                String countryName = cursor.getString(countryNameIndex);
-                String continentName = cursor.getString(continentNameIndex);
-                Country country = new Country(countryName, continentName);
-                countries[i] = country;
-                i++;
-            } // while
-        } // if
-        cursor.close();
-        return countries;
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT " + COLUMN_COUNTRY_NAME + ", " + COLUMN_CONTINENT_NAME + " FROM " + TABLE_COUNTRIES, null);
+            Country[] countries = new Country[cursor.getCount()];
+            int countryNameIndex = cursor.getColumnIndex(COLUMN_COUNTRY_NAME);
+            int continentNameIndex = cursor.getColumnIndex(COLUMN_CONTINENT_NAME);
+            int i = 0;
+            if (countryNameIndex >= 0 && continentNameIndex >= 0) {
+                while (cursor.moveToNext()) {
+                    String countryName = cursor.getString(countryNameIndex);
+                    String continentName = cursor.getString(continentNameIndex);
+                    Country country = new Country(countryName, continentName);
+                    countries[i] = country;
+                    i++;
+                } // while
+            } // if
+            return countries;
+        } catch (SQLiteException e) {
+            Log.e(TAG, "Error retrieving countries from database: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
     } // getCountries()
+
 
     /**
      * Create and/or open a database for reading. The database is not actually
@@ -279,6 +305,52 @@ public class CountriesData extends SQLiteOpenHelper {
         } // if
         return db;
     } // getWritableDatabase()
+
+    public void putRecord(String date, float result) {
+        try {
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_DATE, date);
+            values.put(COLUMN_RESULT, result);
+            SQLiteDatabase db = getWritableDatabase();
+            db.insert(TABLE_RESULTS, null, values);
+        } catch (Exception e) {
+            Log.e(TAG, "Error writing the Quiz Report into the database: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            db.close();
+        } // Writing records from a quiz into the database try / catch block
+    } // putRecord()
+
+    public QuizRecord[] getAllQuizRecords(SQLiteDatabase db) {
+        Cursor cursor = null;
+        try {
+            cursor = db.query(TABLE_RESULTS, null, null, null, null, null, null);
+            if (cursor == null || !cursor.moveToFirst()) {
+                return null; // no records found
+            }
+            QuizRecord[] records = new QuizRecord[cursor.getCount()];
+            int idIndex = cursor.getColumnIndex(COLUMN_ID);
+            int dateIndex = cursor.getColumnIndex(COLUMN_DATE);
+            int resultIndex = cursor.getColumnIndex(COLUMN_RESULT);
+            int i = 0;
+            do {
+                int id = cursor.getInt(idIndex);
+                String date = cursor.getString(dateIndex);
+                float result = cursor.getFloat(resultIndex);
+                QuizRecord record = new QuizRecord(date, result);
+                records[i] = record;
+                i++;
+            } while (cursor.moveToNext());
+            return records;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
 
 
 } // CountriesData Class
