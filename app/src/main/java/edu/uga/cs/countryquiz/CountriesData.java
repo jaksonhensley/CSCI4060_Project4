@@ -16,6 +16,42 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+/*
+ * Schema:
+ *
+ * Table Name: countries
+ * Columns: id INTEGER PRIMARY KEY AUTOINCREMENT, country_name TEXT NOT NULL, continent_name TEXT NOT NULL
+ *
+ * Table Name: results
+ * Columns: id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT NOT NULL, result INTEGER NOT NULL
+ *
+ * +------------------------+
+ * |     TABLE_COUNTRIES    |
+ * +------------------------+
+ * | _id  INTEGER           |
+ * | name TEXT NOT NULL     |
+ * | continent TEXT NOT NULL|
+ * |------------------------|
+ * |         INDEXES        |
+ * |------------------------|
+ * | PK__COUNTRIES           |
+ * +------------------------+
+ *
+ * +------------------------+
+ * |     TABLE_RESULTS      |
+ * +------------------------+
+ * | _id  INTEGER           |
+ * | date TEXT NOT NULL     |
+ * | result FLOAT NOT NULL  |
+ * |------------------------|
+ * |         INDEXES        |
+ * |------------------------|
+ * | PK__RESULTS             |
+ * +------------------------+
+ *
+ */
+
+
 /**
  * CountriesData is a POJO (Plain Ole Java Object) Helper Class that is intended to be a link between
  * the SQLite Database and the Country Quiz app instance. It extends SQLiteOpenHelper and will be
@@ -30,6 +66,7 @@ import java.io.InputStreamReader;
  * NOTE: The constructor for the class is private, so the only way to interact with it is through
  * CountriesData.getInstance().
  */
+
 public class CountriesData extends SQLiteOpenHelper {
 
     // Constant variables that we're using when writing SQL queries on the "countries" table
