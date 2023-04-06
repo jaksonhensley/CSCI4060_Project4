@@ -1,9 +1,247 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
     tools:context=".HelpScreen">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/helpScreenTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="30dp"
+        android:text="Help"
+        android:textAllCaps="true"
+        android:textSize="34sp"
+        android:textStyle="bold|italic" />
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/helpScreenIntro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="Welcome to the Country Quiz app! This app quizzes you on which continent a country is in. Here's a detailed guide to help you get started:"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/helpScreenTitleOne"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="5dp"
+                android:text="Starting a New Quiz"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/helpScreenBodyOne"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="From the main menu, click on the &quot;Start Quiz&quot; button to start a new quiz. The quiz contains 6 multiple choice questions."
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/helpScreenTitleTwo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="5dp"
+                android:text="Taking the Quiz"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/helpScreenBodyTwo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="To move between questions, swipe left and right on the screen. Choose the continent you think the country belongs to by selecting the corresponding button. When you have answered all questions, your score will be displayed."
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/helpScreenTitleThree"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="5dp"
+                android:text="Viewing Past Quizzes"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/helpScreenBodyThree"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="From the main menu, click on the &quot;View Previous Quizzes&quot; button to view your past quizzes. This will display the date the quiz was taken and the score of the quiz."
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/helpScreenTitleFour"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="5dp"
+                android:text="Help Screen"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/helpScreenBodyFour"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="From the main menu, click on the &quot;Help&quot; button to access the help screen. This screen will provide detailed information about the app and answer some common questions."
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/helpScreenFAQTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginRight="5dp"
+                android:text="FAQ"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/helpScreenFAQOneQ"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="Q: How many questions are in the quiz?"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/helpScreenFAQOneA"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="20dp"
+                android:text="A: There are 6 multiple choice questions in the quiz."
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/helpScreenFAQTwoQ"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="Q: How do I move between questions?"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/helpScreenFAQTwoA"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="20dp"
+                android:text="A: Swipe left and right on the screen to move between questions."
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/helpScreenFAQThreeQ"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="Q: What do I do if I don't know the answer to a question?"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/helpScreenFAQThreeA"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="20dp"
+                android:text="A: Choose the answer you think is most likely. You can always review your answers at the end of the quiz."
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/helpScreenFAQFourQ"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="Q: How is my score calculated?"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/helpScreenFAQFourA"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="20dp"
+                android:text="A: Your score is calculated based on the number of correct answers you gave out of the 6 questions."
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/helpScreenFAQFiveQ"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="Q: Can I see my past quiz results?"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/helpScreenFAQFiveA"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="20dp"
+                android:text="A: Yes, you can view your past quiz results by clicking on the &quot;View Previous Quizzes&quot; button from the main menu."
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/helpScreenFAQSixQ"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="Q: How do I reset my quiz results?"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/helpScreenFAQSixA"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="20dp"
+                android:text="A: Unfortunately, there is no option to reset your quiz results."
+                android:textAlignment="center" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
