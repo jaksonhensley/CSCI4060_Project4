@@ -343,6 +343,12 @@ public class CountriesData extends SQLiteOpenHelper {
         return db;
     } // getWritableDatabase()
 
+    /**
+     * Inserts a new quiz record into the database with the given date and result values.
+     * @param date the date of the quiz as a string
+     * @param result the result of the quiz as a float
+     * @throws Exception if there was an error writing the record to the database
+     */
     public void putRecord(String date, float result) {
         try {
             ContentValues values = new ContentValues();
@@ -358,6 +364,13 @@ public class CountriesData extends SQLiteOpenHelper {
         } // Writing records from a quiz into the database try / catch block
     } // putRecord()
 
+    /**
+     * Retrieves all the quiz records from the "results" table in the database.
+     * @param db the SQLiteDatabase object representing the database
+     * @return an array of QuizRecord objects containing all the quiz records in the database, or
+     * null if no records are found
+     * @throws SQLException if there is an error executing the SQL query
+     */
     public QuizRecord[] getAllQuizRecords(SQLiteDatabase db) {
         Cursor cursor = null;
         try {
@@ -385,9 +398,9 @@ public class CountriesData extends SQLiteOpenHelper {
         } finally {
             if (cursor != null) {
                 cursor.close();
-            }
-        }
-    }
+            } // if
+        } // Getting all quiz records try / catch block
+    }// getAllQuizRecords()
 
 
 } // CountriesData Class
