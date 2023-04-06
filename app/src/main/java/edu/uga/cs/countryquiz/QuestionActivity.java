@@ -50,7 +50,7 @@ public class QuestionActivity extends AppCompatActivity {
          * quizCountries[i].getCountry() returns the String representation of the Country's name
          * for the question
          *
-         * quizCountries[i].getContinent() returns the string representation of the Country's
+         * quizCountries[i].getContinent() returns the String representation of the Country's
          * continent for the correct answer choice
          *
          * String[] allContinents contains all of the continent values stored in the database to use
