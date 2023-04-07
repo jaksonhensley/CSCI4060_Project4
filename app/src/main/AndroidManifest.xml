@@ -20,10 +20,6 @@
             android:parentActivityName=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".NewQuiz"
-            android:parentActivityName=".MainActivity"
-            android:exported="false" />
-        <activity
             android:name=".QuestionActivity"
             android:parentActivityName=".MainActivity"
             android:exported="false" />
