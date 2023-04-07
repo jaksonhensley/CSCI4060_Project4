@@ -23,17 +23,17 @@ public class ViewPreviousQuizzes extends AppCompatActivity {
 
         quizRecords = countriesData.getAllQuizRecords(db);
 
-
         ListView listViewResults = findViewById(R.id.viewPreviousQuizzesListView);
         if (quizRecords != null) {
             ResultsAdapter adapter = new ResultsAdapter(this, quizRecords);
             listViewResults.setAdapter(adapter);
-        }
+        } // if
 
+        // Up Button
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        } // if
 
-    }
-}
+    } // onCreate()
+} // ViewPreviousQuizzes Class

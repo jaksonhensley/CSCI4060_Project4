@@ -12,9 +12,10 @@ public class HelpScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help_screen);
 
+        // Up Button
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-    }
-}
+        } // if
+    } // onCreate()
+} // HelpScreen Class

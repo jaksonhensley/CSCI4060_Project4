@@ -18,7 +18,7 @@ public class ResultsAdapter extends ArrayAdapter<QuizRecord> {
         super(context, R.layout.result_item, quizRecords);
         this.context = context;
         this.quizRecords = quizRecords;
-    }
+    } // ResultsAdapter Constructor
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -35,17 +35,17 @@ public class ResultsAdapter extends ArrayAdapter<QuizRecord> {
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
-        }
+        } // if / else
 
         QuizRecord quizRecord = quizRecords[position];
         holder.dateTextView.setText(quizRecord.getDate());
         holder.gradeTextView.setText(String.format(Locale.US, "%.2f%%", quizRecord.getResult()));
 
         return convertView;
-    }
+    } // getView()
 
     private static class ViewHolder {
         TextView dateTextView;
         TextView gradeTextView;
-    }
-}
+    } // ViewHolder Class
+} // ResultsAdapter Class
