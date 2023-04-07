@@ -1,15 +1,33 @@
 package edu.uga.cs.countryquiz;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.Random;
 
+
+
+
 public class QuestionActivity extends AppCompatActivity {
+
+    static int[] grades = {0,0,0,0,0,0};
+
+    public static int[] getGrades() {
+        return grades;
+    }
+
+    public static void setGrade( int position, int grade ) {
+        grades[position] = grade;
+        return;
+    }
+
 
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
@@ -40,9 +58,23 @@ public class QuestionActivity extends AppCompatActivity {
 
         //Finds and sets views
         ViewPager2 pager = findViewById( R.id.viewPager );
-        QuestionPagerAdapter questionAdapter = new QuestionPagerAdapter(getSupportFragmentManager(), getLifecycle(), quizCountries );
+        Button submitButton = findViewById( R.id.submitButton);
+
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Handle the click event for the "Submit Quiz" button
+                Intent intent = new Intent(QuestionActivity.this, GradePage.class);
+                startActivity(intent);
+            } // onClick
+        });
+
+
+
+        QuestionPagerAdapter questionAdapter = new QuestionPagerAdapter(getSupportFragmentManager(), getLifecycle(), quizCountries, pager, submitButton);
         pager.setOrientation( ViewPager2.ORIENTATION_HORIZONTAL );
         pager.setAdapter( questionAdapter );
+
 
 
         /* USAGE:

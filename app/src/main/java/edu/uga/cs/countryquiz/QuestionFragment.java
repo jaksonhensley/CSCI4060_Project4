@@ -1,5 +1,6 @@
 package edu.uga.cs.countryquiz;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,7 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import java.util.Random;
 
@@ -24,9 +27,12 @@ public class QuestionFragment extends Fragment {
             "Africa",
             "Oceania"
     };
-    private String country;
-    private String continent;
-    private int position;
+    private String country; //Country for current question
+    private String continent; //Continent for current country
+    private int position; //Current fragment slide number
+    static Button submitButton; //View for the submit button. only visible on last fragment
+    int correctIndex = 0; //Index for the correct answer
+    int questionGrade = 0;
 
     View view;
 
@@ -35,16 +41,18 @@ public class QuestionFragment extends Fragment {
     }
 
     //
-    public static QuestionFragment newInstance(int questionNumber, String questionCountry, String questionContinent) {
+    public static QuestionFragment newInstance(int questionNumber, String questionCountry, String questionContinent, Button submit) {
 
         QuestionFragment fragment = new QuestionFragment();
-
         Log.d(TAG, "QuestionFragment.newInstance(): fragment: " + fragment);
+
+        submitButton = submit;
 
         //Store the question country and continent into the argument bundle
         Bundle args = new Bundle();
         args.putString( "country", questionCountry );
         args.putString( "continent" , questionContinent );
+        args.putInt("position", questionNumber );
         Log.d(TAG, "QuestionFragment.newInstance(): Country: " + questionCountry);
         Log.d(TAG, "QuestionFragment.newInstance(): Continent: " + questionContinent);
         fragment.setArguments( args );
@@ -60,6 +68,7 @@ public class QuestionFragment extends Fragment {
         if( getArguments() != null ) {
             country = getArguments().getString("country");
             continent = getArguments().getString("continent");
+            position = getArguments().getInt("position");
         }
     }
 
@@ -79,28 +88,28 @@ public class QuestionFragment extends Fragment {
         Random rand = new Random();
 
         //Initialize strings to hold random selections
-        String newContinent = "", usedContinent = "", correct = continent;
+        String newContinent = "", usedContinent = "";
 
         //Obtain a random position for the correct answer
-        int answerPosition = rand.nextInt(3);
-        Log.d(TAG, "QuestionFragment.setOptions(): Correct position: " + answerPosition);
+        correctIndex = rand.nextInt(3);
+        Log.d(TAG, "QuestionFragment.setOptions(): Correct answer index: " + correctIndex);
 
         int i = 0;
 
         while (i < 3) {
 
             //If i = correct answer slot, insert the correct answer passed from the parameter
-            if (i == answerPosition) {
-                option[i] = correct;
+            if (i == correctIndex) {
+                option[i] = continent;
                 i++;
             } else {
                 //Obtain a random continent from the list of continents
                 newContinent = continents[rand.nextInt(6)];
-                Log.d(TAG, "QuestionFragment.setOptions(): Random continent " + i + ": " + newContinent);
+                Log.d(TAG, "QuestionFragment.setOptions(): Random continent in position" + i + ": " + newContinent);
 
                 //  Check if the randomly chosen continent is neither the correct answer
                 //  nor a random continent already chosen
-                if (!(newContinent.equals(correct)) && !(newContinent.equals(usedContinent))) {
+                if (!(newContinent.equals(continent)) && !(newContinent.equals(usedContinent))) {
                     //place the new continent into the options array
                     option[i] = newContinent;
                     //Mark the new continent as used now.
@@ -121,9 +130,9 @@ public class QuestionFragment extends Fragment {
     public void onViewCreated( View view, Bundle savedInstanceState ) {
         super.onViewCreated( view, savedInstanceState);
 
-
-        //Set views to each R.id
+        //Set views to each id
         TextView countryText = view.findViewById(R.id.QuestionCountryView);
+        RadioGroup options = view.findViewById(R.id.radioGroup);
         RadioButton optionOne = view.findViewById(R.id.OptionOne);
         RadioButton optionTwo = view.findViewById(R.id.OptionTwo);
         RadioButton optionThree = view.findViewById(R.id.OptionThree);
@@ -133,13 +142,56 @@ public class QuestionFragment extends Fragment {
 
         //Set questions country
         countryText.setText(country);
+        optionOne.setText("A " + choices[0]);
+        optionTwo.setText("B " + choices[1]);
+        optionThree.setText("C " + choices[2]);
 
-        optionOne.setText(choices[0]);
-        optionTwo.setText(choices[1]);
-        optionThree.setText(choices[2]);
+
+        optionOne.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (correctIndex == 0) {
+                    QuestionActivity.setGrade(position,1);
+                } else {
+                    QuestionActivity.setGrade(position,0);
+                }
+            }
+        });
+        optionTwo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (correctIndex == 1) {
+                    QuestionActivity.setGrade(position,1);
+                } else {
+                    QuestionActivity.setGrade(position,0);
+                }
+            }
+        });
+        optionThree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (correctIndex == 2) {
+                    QuestionActivity.setGrade(position,1);
+                } else {
+                    QuestionActivity.setGrade(position,0);
+                }
+            }
+        });
+
+
+
+
+
+        if ( position < 5) {
+            submitButton.setVisibility(view.GONE);
+        } else {
+            submitButton.setVisibility(view.VISIBLE);
+        }
+
+
+
 
     }
 
-    public static int getNumberOfQuestions() { return 7;}
 
 }
