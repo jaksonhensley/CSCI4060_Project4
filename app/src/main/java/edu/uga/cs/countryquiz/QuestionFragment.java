@@ -30,23 +30,17 @@ public class QuestionFragment extends Fragment {
     private String country; //Country for current question
     private String continent; //Continent for current country
     private int position; //Current fragment slide number
-    static Button submitButton; //View for the submit button. only visible on last fragment
     int correctIndex = 0; //Index for the correct answer
-    int questionGrade = 0;
-
-    View view;
 
     public QuestionFragment() {
         // required empty public constructor
     }
 
     //
-    public static QuestionFragment newInstance(int questionNumber, String questionCountry, String questionContinent, Button submit) {
+    public static QuestionFragment newInstance(int questionNumber, String questionCountry, String questionContinent) {
 
         QuestionFragment fragment = new QuestionFragment();
         Log.d(TAG, "QuestionFragment.newInstance(): fragment: " + fragment);
-
-        submitButton = submit;
 
         //Store the question country and continent into the argument bundle
         Bundle args = new Bundle();
@@ -177,19 +171,6 @@ public class QuestionFragment extends Fragment {
                 }
             }
         });
-
-
-
-
-
-        if ( position < 5) {
-            submitButton.setVisibility(view.GONE);
-        } else {
-            submitButton.setVisibility(view.VISIBLE);
-        }
-
-
-
 
     }
 

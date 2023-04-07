@@ -13,16 +13,12 @@ public class QuestionPagerAdapter extends FragmentStateAdapter {
     Country[] quizCountries = new Country[6];
     String[] quizCountryStrings = new String[6];
     String[] quizContinentStrings = new String[6];
-    ViewPager2 page;
-    Button submitButton;
 
 
 
-    public QuestionPagerAdapter(FragmentManager fragmentManager, Lifecycle lifecycle, Country[] countries, ViewPager2 pager, Button submit) {
+    public QuestionPagerAdapter(FragmentManager fragmentManager, Lifecycle lifecycle, Country[] countries) {
         super( fragmentManager, lifecycle );
 
-        page = pager;
-        submitButton = submit;
         //retrieve Country array and transfer it's data to a String array
         quizCountries = countries;
         for(int i = 0; i < quizCountries.length; i++) {
@@ -35,7 +31,7 @@ public class QuestionPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position){
 
-        return QuestionFragment.newInstance(position, quizCountryStrings[position], quizContinentStrings[position], submitButton);
+        return QuestionFragment.newInstance(position, quizCountryStrings[position], quizContinentStrings[position]);
     }
 
 
