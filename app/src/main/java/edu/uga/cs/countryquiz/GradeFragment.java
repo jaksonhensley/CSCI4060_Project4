@@ -49,7 +49,7 @@ public class GradeFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState ) {
+    public void onViewCreated( View view, Bundle savedInstanceState ) {
         super.onViewCreated( view, savedInstanceState);
 
         TextView finalScore = view.findViewById(R.id.finalScore);
@@ -59,5 +59,5 @@ public class GradeFragment extends Fragment {
 
     }
 
-    public static int getNumber() { return 7;}
+    public static int getNumber() { return 1;}
 }

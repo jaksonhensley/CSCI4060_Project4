@@ -16,11 +16,6 @@ public class QuestionActivity extends AppCompatActivity {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_question );
 
-        ViewPager2 pager = findViewById( R.id.viewPager );
-        QuestionPagerAdapter questionAdapter = new QuestionPagerAdapter(getSupportFragmentManager(), getLifecycle() );
-        pager.setOrientation( ViewPager2.ORIENTATION_HORIZONTAL );
-        pager.setAdapter( questionAdapter );
-
         //The following chunk connects to the database and stores some variables to be used in the questions
         CountriesData countriesData = CountriesData.getInstance(this);
         SQLiteDatabase db = countriesData.getReadableDatabase();
@@ -42,6 +37,13 @@ public class QuestionActivity extends AppCompatActivity {
                 numSelected++;
             } // if
         } // while
+
+        //Finds and sets views
+        ViewPager2 pager = findViewById( R.id.viewPager );
+        QuestionPagerAdapter questionAdapter = new QuestionPagerAdapter(getSupportFragmentManager(), getLifecycle(), quizCountries );
+        pager.setOrientation( ViewPager2.ORIENTATION_HORIZONTAL );
+        pager.setAdapter( questionAdapter );
+
 
         /* USAGE:
          *

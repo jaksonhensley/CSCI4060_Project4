@@ -1,7 +1,7 @@
 package edu.uga.cs.countryquiz;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
+
 import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +25,7 @@ public class QuestionFragment extends Fragment {
             "Oceania"
     };
     private String country;
+    private String continent;
     private int position;
 
     View view;
@@ -33,13 +34,19 @@ public class QuestionFragment extends Fragment {
         // required empty public constructor
     }
 
-    public static QuestionFragment newInstance( int questionNumber ) {
+    //
+    public static QuestionFragment newInstance(int questionNumber, String questionCountry, String questionContinent) {
 
         QuestionFragment fragment = new QuestionFragment();
 
         Log.d(TAG, "QuestionFragment.newInstance(): fragment: " + fragment);
+
+        //Store the question country and continent into the argument bundle
         Bundle args = new Bundle();
-        args.putInt( "question", questionNumber);
+        args.putString( "country", questionCountry );
+        args.putString( "continent" , questionContinent );
+        Log.d(TAG, "QuestionFragment.newInstance(): Country: " + questionCountry);
+        Log.d(TAG, "QuestionFragment.newInstance(): Continent: " + questionContinent);
         fragment.setArguments( args );
         return fragment;
 
@@ -48,9 +55,11 @@ public class QuestionFragment extends Fragment {
     @Override
     public void onCreate( Bundle savedInstance ) {
         super.onCreate( savedInstance );
+
+        //Retrieve arguments from bundle and set in local variables
         if( getArguments() != null ) {
             country = getArguments().getString("country");
-            position = getArguments().getInt("question");
+            continent = getArguments().getString("continent");
         }
     }
 
@@ -61,28 +70,73 @@ public class QuestionFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_question, container, false);
     }
 
+
+    // Method to randomly select continents from a list and set them in random positions
+    // of an array.
+    public String[] setOptions() {
+        String[] option = new String[3];
+
+        Random rand = new Random();
+
+        //Initialize strings to hold random selections
+        String newContinent = "", usedContinent = "", correct = continent;
+
+        //Obtain a random position for the correct answer
+        int answerPosition = rand.nextInt(3);
+        Log.d(TAG, "QuestionFragment.setOptions(): Correct position: " + answerPosition);
+
+        int i = 0;
+
+        while (i < 3) {
+
+            //If i = correct answer slot, insert the correct answer passed from the parameter
+            if (i == answerPosition) {
+                option[i] = correct;
+                i++;
+            } else {
+                //Obtain a random continent from the list of continents
+                newContinent = continents[rand.nextInt(6)];
+                Log.d(TAG, "QuestionFragment.setOptions(): Random continent " + i + ": " + newContinent);
+
+                //  Check if the randomly chosen continent is neither the correct answer
+                //  nor a random continent already chosen
+                if (!(newContinent.equals(correct)) && !(newContinent.equals(usedContinent))) {
+                    //place the new continent into the options array
+                    option[i] = newContinent;
+                    //Mark the new continent as used now.
+                    usedContinent = newContinent;
+                    i++;
+                } //if
+            } //else
+
+        } //while
+
+
+        return option;
+    }
+
+
+
     @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState ) {
+    public void onViewCreated( View view, Bundle savedInstanceState ) {
         super.onViewCreated( view, savedInstanceState);
 
+
+        //Set views to each R.id
         TextView countryText = view.findViewById(R.id.QuestionCountryView);
         RadioButton optionOne = view.findViewById(R.id.OptionOne);
         RadioButton optionTwo = view.findViewById(R.id.OptionTwo);
         RadioButton optionThree = view.findViewById(R.id.OptionThree);
 
-        Random rand = new Random();
-        int A,B;
-        A = rand.nextInt(6);
-        B = rand.nextInt(6);
+        //initialize choice array and randomize choices
+        String[] choices = setOptions();
 
-        countryText.setText(Integer.toString(position));
-        optionOne.setText(continents[A]);
-        optionTwo.setText(continents[B]);
-        optionThree.setText(continents[rand.nextInt(6)]);
+        //Set questions country
+        countryText.setText(country);
 
-        if (position == 6) {
-            countryText.setText("FINAL GRADING PAGE");
-        }
+        optionOne.setText(choices[0]);
+        optionTwo.setText(choices[1]);
+        optionThree.setText(choices[2]);
 
     }
 
