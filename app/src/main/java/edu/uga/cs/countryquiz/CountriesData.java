@@ -1,6 +1,5 @@
 package edu.uga.cs.countryquiz;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
@@ -12,7 +11,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -96,7 +94,7 @@ public class CountriesData extends SQLiteOpenHelper {
     //
     // To use the local scope of context (getInstance(), for example), simply use the
     // "context" variable. To use the global scope of context (onCreate()) use "this.context"
-    private Context context;
+    private final Context context;
 
     // This is our database
     private SQLiteDatabase db; // TODO: Do we need this?
@@ -167,6 +165,7 @@ public class CountriesData extends SQLiteOpenHelper {
         try {
             db.execSQL(createCountriesTableQuery);
             db.execSQL(createResultsTableQuery);
+            close();
         } catch (SQLException e) {
             Log.e(TAG, "Error creating tables", e);
             e.printStackTrace();
@@ -205,13 +204,14 @@ public class CountriesData extends SQLiteOpenHelper {
                 contentValues.put(COLUMN_CONTINENT_NAME, values[1]);
                 db.insert(TABLE_COUNTRIES, null, contentValues);
             } // while
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Error reading CSV into the Database", e);
             e.printStackTrace();
         } finally {
             try {
                 inputStream.close();
-            } catch (IOException e) {
+                close();
+            } catch (Exception e) {
                 Log.e(TAG, "Error closing the inputStream", e);
                 e.printStackTrace();
             } // Closing inputStream try / catch block
@@ -223,13 +223,12 @@ public class CountriesData extends SQLiteOpenHelper {
      * @return a String array containing the names of all unique continents in the database
      */
     public String[] getContinents(SQLiteDatabase db) {
-        Cursor cursor = null;
-        String[] continents = null;
 
-        try {
+        String[] continents = null;
+        open();
+        try (Cursor cursor = db.rawQuery("SELECT DISTINCT " + COLUMN_CONTINENT_NAME + " FROM " + TABLE_COUNTRIES, null)) {
 
             // NOTE: Using the DISTINCT keyword returns every unique continent in the data set
-            cursor = db.rawQuery("SELECT DISTINCT " + COLUMN_CONTINENT_NAME + " FROM " + TABLE_COUNTRIES, null);
             continents = new String[cursor.getCount()];
 
             // Number of unique continents
@@ -244,13 +243,13 @@ public class CountriesData extends SQLiteOpenHelper {
                     i++;
                 } // while
             } // if
-            cursor.close();
+            close();
             return continents;
         } catch (Exception e) {
             Log.e(TAG, "Error getting the unique continent names from the Database", e);
             e.printStackTrace();
         } finally {
-            cursor.close();
+            close();
             return continents;
         }
     } // getContinents()
@@ -260,16 +259,9 @@ public class CountriesData extends SQLiteOpenHelper {
      * @param db The SQLiteDatabase to retrieve data from.
      * @return An array of Country objects representing all countries in the database.
      */
-    /**
-     * Retrieve all countries from the database.
-     *
-     * @param db the SQLiteDatabase instance to retrieve the data from.
-     * @return an array of Country objects.
-     */
     public Country[] getCountries(SQLiteDatabase db) {
-        Cursor cursor = null;
-        try {
-            cursor = db.rawQuery("SELECT " + COLUMN_COUNTRY_NAME + ", " + COLUMN_CONTINENT_NAME + " FROM " + TABLE_COUNTRIES, null);
+        open();
+        try (Cursor cursor = db.rawQuery("SELECT " + COLUMN_COUNTRY_NAME + ", " + COLUMN_CONTINENT_NAME + " FROM " + TABLE_COUNTRIES, null)) {
             Country[] countries = new Country[cursor.getCount()];
             int countryNameIndex = cursor.getColumnIndex(COLUMN_COUNTRY_NAME);
             int continentNameIndex = cursor.getColumnIndex(COLUMN_CONTINENT_NAME);
@@ -289,9 +281,7 @@ public class CountriesData extends SQLiteOpenHelper {
             e.printStackTrace();
             return null;
         } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
+            close();
         }
     } // getCountries()
 
@@ -338,7 +328,7 @@ public class CountriesData extends SQLiteOpenHelper {
      * @return a writable database object
      * @throws SQLiteException if the database cannot be opened for writing
      */
-    public SQLiteDatabase getWritableDatabase() {
+    public synchronized SQLiteDatabase getWritableDatabase() {
         if (db == null) {
             db = super.getWritableDatabase();
         } // if
@@ -353,6 +343,7 @@ public class CountriesData extends SQLiteOpenHelper {
      */
     public void putRecord(String date, float result) {
         try {
+            open();
             ContentValues values = new ContentValues();
             values.put(COLUMN_DATE, date);
             values.put(COLUMN_RESULT, result);
@@ -362,7 +353,7 @@ public class CountriesData extends SQLiteOpenHelper {
             Log.e(TAG, "Error writing the Quiz Report into the database: " + e.getMessage());
             e.printStackTrace();
         } finally {
-            db.close();
+            close();
         } // Writing records from a quiz into the database try / catch block
     } // putRecord()
 
@@ -374,23 +365,22 @@ public class CountriesData extends SQLiteOpenHelper {
      * @throws SQLException if there is an error executing the SQL query
      */
     public QuizRecord[] getAllQuizRecords(SQLiteDatabase db) {
-        Cursor cursor = null;
-        try {
-            cursor = db.query(TABLE_RESULTS, null, null, null, null, null, null);
+        open();
+        try (Cursor cursor = db.rawQuery("SELECT " + COLUMN_RESULT + ", " + COLUMN_DATE + " FROM " + TABLE_RESULTS, null)) {
             if (cursor == null || !cursor.moveToFirst()) {
+                Log.d("CountryQuiz", "No records found");
                 return null; // no records found
             }
             QuizRecord[] records = new QuizRecord[cursor.getCount()];
-            int idIndex = cursor.getColumnIndex(COLUMN_ID);
             int dateIndex = cursor.getColumnIndex(COLUMN_DATE);
             int resultIndex = cursor.getColumnIndex(COLUMN_RESULT);
             int i = 0;
             do {
-                int id = cursor.getInt(idIndex);
                 String date = cursor.getString(dateIndex);
                 float result = cursor.getFloat(resultIndex);
                 QuizRecord record = new QuizRecord(date, result);
                 records[i] = record;
+                Log.d("CountryQuiz", "Record " + i + ": " + record);
                 i++;
             } while (cursor.moveToNext());
             return records;
@@ -398,11 +388,21 @@ public class CountriesData extends SQLiteOpenHelper {
             e.printStackTrace();
             return null;
         } finally {
-            if (cursor != null) {
-                cursor.close();
-            } // if
-        } // Getting all quiz records try / catch block
-    }// getAllQuizRecords()
+            close();
+        }
+    }
 
+
+    public SQLiteDatabase open() throws SQLException {
+        db = getWritableDatabase();
+        return db;
+    }
+
+    public void close() {
+        if (db != null) {
+            db.close();
+            db = null;
+        }
+    }
 
 } // CountriesData Class

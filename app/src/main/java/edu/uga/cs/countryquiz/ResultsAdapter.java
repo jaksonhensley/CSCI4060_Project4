@@ -39,7 +39,7 @@ public class ResultsAdapter extends ArrayAdapter<QuizRecord> {
 
         QuizRecord quizRecord = quizRecords[position];
         holder.dateTextView.setText(quizRecord.getDate());
-        holder.gradeTextView.setText(String.format(Locale.US, "%.2f%%", quizRecord.getResult()));
+        holder.gradeTextView.setText(quizRecord.getResult());
 
         return convertView;
     } // getView()

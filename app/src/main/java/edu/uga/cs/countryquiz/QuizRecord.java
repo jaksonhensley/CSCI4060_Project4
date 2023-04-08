@@ -31,8 +31,9 @@ public class QuizRecord {
      * Returns the results of the quiz as a numerical score
      * @return the results of the quiz as a numerical score
      */
-    public float getResult() {
-        return result;
+    public String getResult() {
+        int intResult = (int) result;
+        return Integer.toString(intResult);
     } // getResult()
 } // QuizRecord Class
 
