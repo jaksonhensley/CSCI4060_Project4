@@ -1,6 +1,5 @@
 package edu.uga.cs.countryquiz;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -31,17 +30,18 @@ public class QuestionFragment extends Fragment {
     private String continent; //Continent for current country
     private int position; //Current fragment slide number
     int correctIndex = 0; //Index for the correct answer
+    static Button submitButton;
 
     public QuestionFragment() {
         // required empty public constructor
     }
 
     //
-    public static QuestionFragment newInstance(int questionNumber, String questionCountry, String questionContinent) {
+    public static QuestionFragment newInstance(int questionNumber, String questionCountry, String questionContinent, Button submit) {
 
         QuestionFragment fragment = new QuestionFragment();
         Log.d(TAG, "QuestionFragment.newInstance(): fragment: " + fragment);
-
+        submitButton = submit;
         //Store the question country and continent into the argument bundle
         Bundle args = new Bundle();
         args.putString( "country", questionCountry );
@@ -171,6 +171,14 @@ public class QuestionFragment extends Fragment {
                 }
             }
         });
+
+        if (position < 5) {
+            submitButton.setVisibility(View.GONE);
+        } else if (position == 5) {
+            submitButton.setVisibility(View.VISIBLE);
+        }
+
+
 
     }
 

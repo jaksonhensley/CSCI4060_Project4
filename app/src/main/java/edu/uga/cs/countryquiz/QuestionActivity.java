@@ -71,7 +71,7 @@ public class QuestionActivity extends AppCompatActivity {
 
 
 
-        QuestionPagerAdapter questionAdapter = new QuestionPagerAdapter(getSupportFragmentManager(), getLifecycle(), quizCountries);
+        QuestionPagerAdapter questionAdapter = new QuestionPagerAdapter(getSupportFragmentManager(), getLifecycle(), quizCountries, submitButton);
         pager.setOrientation( ViewPager2.ORIENTATION_HORIZONTAL );
         pager.setAdapter( questionAdapter );
         pager.setOffscreenPageLimit(4);

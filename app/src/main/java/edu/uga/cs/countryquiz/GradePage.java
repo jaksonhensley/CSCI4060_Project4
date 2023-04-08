@@ -3,6 +3,7 @@ package edu.uga.cs.countryquiz;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -12,6 +13,8 @@ import java.util.Date;
 
 
 public class GradePage extends AppCompatActivity {
+
+    private static final String TAG = "Grade Page";
 
     int[] grades = QuestionActivity.getGrades();
     String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
@@ -36,13 +39,15 @@ public class GradePage extends AppCompatActivity {
 
         //Displays grade
         text.setText("Quiz Grade");
-        gradeDisplay.setText(Integer.toString(gradeTotal));
+        gradeDisplay.setText(Integer.toString((gradeTotal/grades.length) * 100));
 
         //Store date and grade into database
         CountriesData countriesData = CountriesData.getInstance(this);
         SQLiteDatabase db = countriesData.getWritableDatabase();
 
-        countriesData.putRecord(date, gradeTotal);
+
+        //Sets the
+        countriesData.putRecord(date, (float)((gradeTotal/grades.length)*100));
 
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
